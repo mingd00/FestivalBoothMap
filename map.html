@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Bootstrap demo</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp"
+      crossorigin="anonymous"
+    />
+    <style>
+      .tab-content {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      body {
+        overflow-y: scroll;
+      }
+      @font-face {
+        font-family: "BMDOHYEON";
+        src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/BMDOHYEON.woff")
+          format("woff");
+        font-weight: normal;
+        font-style: normal;
+      }
+      * {
+        font-family: "BMDOHYEON";
+      }
+      .nav-link {
+        margin-right: 20px;
+        color: #ff69b4;
+      }
+
+      .info .link {
+        color: #5085bb;
+      }
+    </style>
+  </head>
+  <body>
+    <h1 style="text-align: center">부스 정보</h1>
+    <h5 style="text-align: center">
+      마커를 클릭하면 각 부스에 관한 정보를 볼 수 있습니다!
+    </h5>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-qKXV1j0HvMUeCBQ+QVp7JcfGl760yU08IQ+GpUo5hlbpg51QRiuqHAJz8+BrxE/N"
+      crossorigin="anonymous"
+    ></script>
+    <ul class="nav nav-tabs justify-content-center" id="myTab">
+      <li class="nav-item">
+        <a class="nav-link active" aria-current="page" href="#tab1">4/5(수)</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#tab2">4/6(목)</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#tab3">4/7(금)</a>
+      </li>
+    </ul>
+    <div class="tab-content">
+      <div class="tab-pane active" id="tab1">
+        <div class="row">
+          <div class="com-md-6">
+            <!-- 카테고리 선택 버튼 -->
+            <div>
+              <button onclick="showMarkers('all')">전체</button>
+              <button onclick="showMarkers('food')">푸드코트</button>
+              <button onclick="showMarkers('drink')">주점</button>
+              <button onclick="showMarkers('booth')">체험부스</button>
+            </div>
+
+            <div id="map" style="width: 350px; height: 600px"></div>
+            <script
+              type="text/javascript"
+              src="http://dapi.kakao.com/v2/maps/sdk.js?appkey=1d5cf84f3f7c3f74b82af72fb18c4bd5"
+            ></script>
+            <script>
+              var container = document.getElementById("map");
+              var options = {
+                //위도, 경도
+                center: new kakao.maps.LatLng(34.906808, 126.431992),
+                level: 1,
+              };
+
+              var map = new kakao.maps.Map(container, options);
+
+              // 마커 이미지를 담을 배열
+              var food_markerImages = [];
+              var drink_markerImages = [];
+              var booth_markerImages = [];
+
+              //food
+              var food_markerImages = [
+                "img/food/1.png",
+                "img/food/2.png",
+                "img/food/3.png",
+                "img/food/4.png",
+                "img/food/5.png",
+                "img/food/6.png",
+                "img/food/7.png",
+                "img/food/8.png",
+                "img/food/9.png",
+                "img/food/10.png",
+                "img/food/11.png",
+                "img/food/12.png",
+                "img/food/13.png",
+                "img/food/14.png",
+              ];
+
+              //drink
+              var drink_markerImages = [
+                "img/drink/1.png",
+                "img/drink/2.png",
+                "img/drink/3.png",
+                "img/drink/4.png",
+                "img/drink/5.png",
+                "img/drink/6.png",
+                "img/drink/7.png",
+                "img/drink/8.png",
+                "img/drink/9.png",
+                "img/drink/10.png",
+              ];
+
+              //booth
+              var booth_markerImages = [
+                "img/booth/1.png",
+                "img/booth/2.png",
+                "img/booth/3.png",
+                "img/booth/4.png",
+                "img/booth/5.png",
+                "img/booth/6.png",
+                "img/booth/7.png",
+                "img/booth/8.png",
+                "img/booth/9.png",
+                "img/booth/10.png",
+                "img/booth/11.png",
+                "img/booth/12.png",
+                "img/booth/13.png",
+                "img/booth/14.png",
+                "img/booth/15.png",
+                "img/booth/16.png",
+                "img/booth/17.png",
+                "img/booth/18.png",
+                "img/booth/19.png",
+                "img/booth/20.png",
+                "img/booth/21.png",
+                "img/booth/22.png",
+                "img/booth/23.png",
+                "img/booth/24.png",
+                "img/booth/25.png",
+                "img/booth/26.png",
+              ];
+
+              // 마커를 담을 배열
+              var food_markers = [];
+              var drink_markers = [];
+              var booth_markers = [];
+
+              // 컨탠츠 내용 + 마커가 표시될 위치
+              //food
+              var food_positions = [
+                {
+                  content: 
+                    '        <div class="title">' + 
+                    '            카카오 스페이스닷원' + 
+                    '        </div>' + 
+                    '        <div class="body">' + 
+                    '            <div class="desc">' + 
+                    '                <div class="ellipsis">제주특별자치도 제주시 첨단로 242</div>' + 
+                    '                <div class="jibun ellipsis">(우) 63309 (지번) 영평동 2181</div>' +  
+                    '            </div>' + 
+                    '        </div>' +  
+                    '</div>',
+                  latlng: new kakao.maps.LatLng(34.90702, 126.43158),
+                },
+                {
+                  content: "2번째 마커",
+                  latlng: new kakao.maps.LatLng(34.90696, 126.4316),
+                },
+                {
+                  content: "3번째 마커",
+                  latlng: new kakao.maps.LatLng(34.9069, 126.43162),
+                },
+                {
+                  content: "4번째 마커",
+                  latlng: new kakao.maps.LatLng(34.90684, 126.43164),
+                },
+                {
+                  content: "5번째 마커",
+                  latlng: new kakao.maps.LatLng(34.90678, 126.43166),
+                },
+                {
+                  content: "6번째 마커",
+                  latlng: new kakao.maps.LatLng(34.90672, 126.43168),
+                },
+                {
+                  content: "7번째 마커",
+                  latlng: new kakao.maps.LatLng(34.90666, 126.4317),
+                },
+                {
+                  content: "8번째 마커",
+                  latlng: new kakao.maps.LatLng(34.9066, 126.43172),
+                },
+                {
+                  content: "9번째 마커",
+                  latlng: new kakao.maps.LatLng(34.90654, 126.43174),
+                },
+                {
+                  content: "10번째 마커",
+                  latlng: new kakao.maps.LatLng(34.90648, 126.43176),
+                },
+                {
+                  content: "11번째 마커",
+                  latlng: new kakao.maps.LatLng(34.90642, 126.43178),
+                },
+                {
+                  content: "12번째 마커",
+                  latlng: new kakao.maps.LatLng(34.90636, 126.4318),
+                },
+                {
+                  content: "13번째 마커",
+                  latlng: new kakao.maps.LatLng(34.9063, 126.43182),
+                },
+                {
+                  content: "14번째 마커",
+                  latlng: new kakao.maps.LatLng(34.90624, 126.43184),
+                },
+              ];
+
+              //drink
+              var drink_positions = [
+                {
+                  latlng: new kakao.maps.LatLng(34.90727, 126.4322),
+                },
+                {
+                  latlng: new kakao.maps.LatLng(34.90738, 126.43227),
+                },
+                {
+                  latlng: new kakao.maps.LatLng(34.90724, 126.432056),
+                },
+                {
+                  latlng: new kakao.maps.LatLng(34.90737, 126.43214),
+                },
+                {
+                  latlng: new kakao.maps.LatLng(34.907216, 126.431914),
+                },
+                {
+                  latlng: new kakao.maps.LatLng(34.90735, 126.43201),
+                },
+                {
+                  latlng: new kakao.maps.LatLng(34.907181, 126.431767),
+                },
+                {
+                  latlng: new kakao.maps.LatLng(34.907333, 126.43188),
+                },
+                {
+                  latlng: new kakao.maps.LatLng(34.907307, 126.43176),
+                },
+                {
+                  latlng: new kakao.maps.LatLng(34.907278, 126.43164),
+                },
+              ];
+              // 배열에 정의된 위치들에 대해 마커와 인포윈도우를 생성하여 지도 위에 추가
+              //food
+              for (var i = 0; i < food_positions.length; i++) {
+                // 마커 생성
+                var marker = new kakao.maps.Marker({
+                  id: "food",
+                  position: food_positions[i].latlng,
+                  image: new kakao.maps.MarkerImage(
+                    food_markerImages[i],
+                    new kakao.maps.Size(40, 35)
+                  ),
+                });
+
+                // 마커에 클릭 이벤트 등록
+                kakao.maps.event.addListener(
+                  marker,
+                  "click",
+                  (function (marker, content) {
+                    return function () {
+                      // 인포윈도우 생성
+                      var infowindow = new kakao.maps.InfoWindow({
+                        content: content,
+                        removable: true,
+                      });
+
+                      // 인포윈도우 표시
+                      infowindow.open(map, marker);
+                    };
+                  })(marker, food_positions[i].content)
+                );
+
+                // 마커를 배열에 추가
+                food_markers.push(marker);
+              }
+
+              //drink
+              for (var i = 0; i < drink_positions.length; i++) {
+                // 마커 생성
+                var marker = new kakao.maps.Marker({
+                  id: "drink",
+                  position: drink_positions[i].latlng,
+                  image: new kakao.maps.MarkerImage(
+                    drink_markerImages[i],
+                    new kakao.maps.Size(40, 35)
+                  ),
+                });
+
+                // 마커에 클릭 이벤트 등록
+                kakao.maps.event.addListener(
+                  marker,
+                  "click",
+                  (function (marker, content) {
+                    return function () {
+                      // 인포윈도우 생성
+                      var infowindow = new kakao.maps.InfoWindow({
+                        content: content,
+                        removable: true,
+                      });
+
+                      // 인포윈도우 표시
+                      infowindow.open(map, marker);
+                    };
+                  })(marker, drink_positions[i].content)
+                );
+
+                // 마커를 배열에 추가
+                drink_markers.push(marker);
+              }
+
+              // 마커를 지도 위에 추가
+              for (var i = 0; i < food_markers.length; i++) {
+                food_markers[i].setMap(map);
+              }
+              for (var i = 0; i < drink_markers.length; i++) {
+                drink_markers[i].setMap(map);
+              }
+              
+            </script>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <p>부스 번호 + 정보</p>
+        </div>
+      </div>
+      <div class="tab-pane" id="tab2">
+        <p>Tab 2 content goes here.</p>
+      </div>
+      <div class="tab-pane" id="tab3">
+        <p>Tab 3 content goes here.</p>
+      </div>
+    </div>
+    <script>
+      var triggerTabList = [].slice.call(document.querySelectorAll("#myTab a"));
+      triggerTabList.forEach(function (triggerEl) {
+        var tabTrigger = new bootstrap.Tab(triggerEl);
+
+        triggerEl.addEventListener("click", function (event) {
+          event.preventDefault();
+          tabTrigger.show();
+        });
+      });
+    </script>
+  </body>
+</html>

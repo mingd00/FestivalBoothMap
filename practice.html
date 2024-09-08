@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap demo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp" crossorigin="anonymous">
+    <style>
+      body {
+        overflow-y: scroll;
+      }
+      @font-face {
+        font-family: 'BMDOHYEON';
+        src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/BMDOHYEON.woff') format('woff');
+        font-weight: normal;
+        font-style: normal;
+      }
+      *{
+        font-family: 'BMDOHYEON';
+      }
+      .nav-link {
+        margin-right: 20px;
+      }
+      .customoverlay {position:relative;bottom:85px;border-radius:6px;border: 1px solid #ccc;border-bottom:2px solid #ddd;float:left;}
+      .customoverlay:nth-of-type(n) {border:0; box-shadow:0px 1px 2px #888;}
+      .customoverlay a {display:block;text-decoration:none;color:#000;text-align:center;border-radius:6px;font-size:14px;font-weight:bold;overflow:hidden;background: #d95050;background: #d95050 url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/arrow_white.png) no-repeat right 14px center;}
+      .customoverlay .title {display:block;text-align:center;background:#fff;margin-right:35px;padding:10px 15px;font-size:14px;font-weight:bold;}
+      .customoverlay:after {content:'';position:absolute;margin-left:-12px;left:50%;bottom:-12px;width:22px;height:12px;background:url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white.png')}   
+    </style>        
+  </head>
+  <body>
+    <h1 style="text-align: center;">부스 정보</h1>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/js/bootstrap.bundle.min.js" integrity="sha384-qKXV1j0HvMUeCBQ+QVp7JcfGl760yU08IQ+GpUo5hlbpg51QRiuqHAJz8+BrxE/N" crossorigin="anonymous"></script>
+    <ul class="nav nav-tabs justify-content-center" id="myTab">
+      <li class="nav-item">
+        <a class="nav-link active" aria-current="page" href="#tab1">4/5(수)</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#tab2">4/6(목)</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#tab3">4/7(금)</a>
+      </li>
+    </ul>
+    <div class="tab-content">
+      <div class="tab-pane active" id="tab1">
+        <div class="row">
+          <div class="com-md-6">
+            <div id="map" style="width: 375px; height:600px;"></div>
+            <script type="text/javascript" src="http://dapi.kakao.com/v2/maps/sdk.js?appkey=1d5cf84f3f7c3f74b82af72fb18c4bd5"></script>
+            <script>
+              var container = document.getElementById('map');
+              var options = {
+                  //위도, 경도
+                  center: new kakao.maps.LatLng(34.906808, 126.431992),
+                  level: 1
+              };
+      
+              var map = new kakao.maps.Map(container, options);
+      
+              var imageSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png', // 마커이미지의 주소입니다    
+                  imageSize = new kakao.maps.Size(30, 35) // 마커이미지의 크기
+                  
+              // 마커의 이미지정보를 가지고 있는 마커이미지를 생성
+              var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize)
+
+              // 컨탠츠 내용 + 마커가 표시될 위치
+              var positions = [
+              {
+                content: '<div class="wrap" style="width: 220px; height: 180px; padding:8px;">' + 
+                  '         <div class="info">' + 
+                  '           <div class="title">' + 
+                  '            염통꼬치' + 
+                  '            <div class="close" onclick="closeOverlay()" title="닫기"></div>' + 
+                  '           </div>' + 
+                  '           <div class="body">' + 
+                  '             <div class="img">' +
+                  '                <img src="img.png" width="73" height="70">' +
+                  '             </div>' + 
+                  '             <div class="desc">' + 
+                  '                <div class="ellipsis">부스 설명 : 염통꼬치 파는 곳</div>' + 
+                  '                <div class="jibun ellipsis">가격 : 염통꼬치 - 1,000원</div>' +  
+                  '            </div>' + 
+                  '          </div>' + 
+                  '       </div>' +    
+                  '     </div>',
+                latlng: new kakao.maps.LatLng(34.907081, 126.431579)
+              },
+              {
+                content: '2번째 마커',
+                latlng:new kakao.maps.LatLng(34.906960, 126.431607)
+              }
+              ];
+
+              for(var i = 0; i < positions.length; i++){
+                // 마커 생성
+                var marker = new kakao.maps.Marker({
+                  map:map,
+                  position: positions[i].latlng,
+                  image: markerImage // 마커이미지 설정 
+                });
+
+                // 인포윈도우 생성
+                var infowindow = new kakao.maps.InfoWindow({
+                  content: positions[i].content, // 인포윈도우에 표시할 내용
+                  removable : true, 
+                  maxWidth : 500 // 인포윈도우 최대 너비
+                }); 
+              }
+
+
+              // 마커 클릭 이벤트 등록
+              kakao.maps.event.addListener(marker, 'click', function() {
+                  // 인포윈도우 표시
+                  infowindow.open(map, marker);
+              });
+                
+      
+              // 마커가 지도 위에 표시되도록 설정합니다
+              marker.setMap(map);  
+          </script>
+        </div>
+        </div>
+          <div class="col-md-6">
+            <p>부스 번호 + 정보</p>
+          </div>
+      </div>
+    <div class="tab-pane" id="tab2">
+      <p>Tab 2 content goes here.</p>
+    </div>
+    <div class="tab-pane" id="tab3">
+      <p>Tab 3 content goes here.</p>
+    </div>
+  </div>
+  <script>
+    var triggerTabList = [].slice.call(document.querySelectorAll('#myTab a'))
+    triggerTabList.forEach(function (triggerEl) {
+      var tabTrigger = new bootstrap.Tab(triggerEl)
+  
+      triggerEl.addEventListener('click', function (event) {
+        event.preventDefault()
+        tabTrigger.show()
+      })
+    })
+  </script>
+</body>
+</html>

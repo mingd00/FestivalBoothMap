@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Kakao 지도 시작하기</title>
+    <style>
+      .customoverlay {
+        position: relative;
+        bottom: 85px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+        border-bottom: 2px solid #ddd;
+        float: left;
+      }
+      .customoverlay:nth-of-type(n) {
+        border: 0;
+        box-shadow: 0px 1px 2px #888;
+      }
+      .customoverlay a {
+        display: block;
+        text-decoration: none;
+        color: #000;
+        text-align: center;
+        border-radius: 6px;
+        font-size: 14px;
+        font-weight: bold;
+        overflow: hidden;
+        background: #d95050;
+        background: #d95050
+          url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/arrow_white.png)
+          no-repeat right 14px center;
+      }
+      .customoverlay .title {
+        display: block;
+        text-align: center;
+        background: #fff;
+        margin-right: 35px;
+        padding: 10px 15px;
+        font-size: 14px;
+        font-weight: bold;
+      }
+      .customoverlay:after {
+        content: "";
+        position: absolute;
+        margin-left: -12px;
+        left: 50%;
+        bottom: -12px;
+        width: 22px;
+        height: 12px;
+        background: url("https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white.png");
+      }
+    </style>
+  </head>
+  <body>
+    <div id="map" style="width: 1500px; height: 700px"></div>
+    <script
+      type="text/javascript"
+      src="http://dapi.kakao.com/v2/maps/sdk.js?appkey=1d5cf84f3f7c3f74b82af72fb18c4bd5"
+    ></script>
+    <script>
+      var container = document.getElementById("map");
+      var options = {
+        //위도, 경도
+        center: new kakao.maps.LatLng(34.906808, 126.431992),
+        level: 1,
+      };
+
+      var map = new kakao.maps.Map(container, options);
+
+      var markerImageSrc =
+        "http://t1.daumcdn.net/localimg/localimages/07/2012/img/marker_normal.png";
+
+      var markerImageSize = new kakao.maps.Size(24, 35);
+      var markerImageOption = {
+        offset: new kakao.maps.Point(12, 35),
+      };
+
+      var markerImage = new kakao.maps.MarkerImage(
+        markerImageSrc,
+        markerImageSize,
+        markerImageOption
+      );
+
+      var marker = new kakao.maps.Marker({
+        position: new kakao.maps.LatLng(34.906808, 126.431992),
+        image: markerImage,
+      });
+
+      marker.setMap(map);
+    </script>
+  </body>
+</html>
